@@ -21,7 +21,23 @@ router.get("/:id", validatePostId, (req, res) => {
   //   console.log(req.post);
 });
 
-router.delete("/:id", (req, res) => {});
+router.delete("/:id", validatePostId, (req, res) => {
+  const { id } = req.params;
+
+  DB.remove(id)
+    .then(post => {
+      if (post) {
+        res.status(200).json({ message: "The post was deleted" });
+      } else {
+        res
+          .status(404)
+          .json({ message: "The post with the specified ID does not exist." });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ error: "The post could not be removed" });
+    });
+});
 
 router.put("/:id", (req, res) => {});
 
