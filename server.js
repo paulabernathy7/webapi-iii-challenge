@@ -8,8 +8,8 @@ const server = express();
 server.use(express.json());
 
 server.use(morgan("dev"));
-server.use("/api/users", userRouter);
-server.use("/api/posts", postRouter);
+server.use("/api/users", logger, userRouter);
+server.use("/api/posts", logger, postRouter);
 server.use(helmet());
 server.use(logger);
 
@@ -20,7 +20,7 @@ server.get("/", (req, res, next) => {
 });
 
 //custom middleware
-
+// logger is global middle ware
 function logger(req, res, next) {
   const date = new Date();
   const method = req.method;
