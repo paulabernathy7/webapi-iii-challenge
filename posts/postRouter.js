@@ -39,14 +39,39 @@ router.delete("/:id", validatePostId, (req, res) => {
     });
 });
 
-router.put("/:id", (req, res) => {});
+router.put("/:id", (req, res) => {
+  console.log(req.params);
+  const { id } = req.params;
+  const { text } = req.body;
+
+  if (!text) {
+    res.status(400).json({ errorMessage: "Please provide changes to post." });
+  } else {
+    DB.update(id, req.body)
+      .then(post => {
+        if (post) {
+          res.status(200).json(post);
+        } else {
+          res.status(404).json({
+            message: "The post with the specified ID does not exist"
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).json({
+          errorMessage: "The post information count not be modified"
+        });
+      });
+  }
+});
 
 // custom middleware
-
+// tried async await and try catch
 async function validatePostId(req, res, next) {
   try {
     const { id } = req.params;
     const post = await DB.getById(id);
+    // console.log(req.params);
     if (post) {
       req.post = post;
       next();
