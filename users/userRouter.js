@@ -4,7 +4,6 @@ DB = require("./userDb");
 const router = express.Router();
 
 router.post("/", validateUser, (req, res) => {
-  console.log(req.body);
   DB.insert(req.body)
     .then(user => {
       res.status(201).json(user);
